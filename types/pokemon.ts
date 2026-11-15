@@ -8,8 +8,11 @@ export type Pokemon = {
     height: number;             // in decimeters (divide by 10 for meters)
     weight: number;             // in hectograms (divide by 10 for kilograms)
     types: { type: { name: string } }[];   // list 1 or 2 types, e.g. "fire", "flying"
-    stats: { base_stat: number; stat: { name: string } }[];          // base stats (hp, attack, defense, etc.) valus from 1 to 255
+    stats: { base_stat: number; stat: { name: string } }[];          // base stats (hp, attack, defense, etc.) vals from 1 to 255
     abilities: { ability: { name: string } }[];   // list of pokemon's abilities
+    is_default: boolean;          // false for alternate forms (megas, regional forms, etc.)
+    species: { url: string };     // official English name
+    forms: { url: string }[];     // alternate form name like "Attack Forme" or "Galarian" (if any), or empty array if none
     sprites: {
         front_default: string | null;     // small pixel sprite, or null if none
         other: {
@@ -20,5 +23,6 @@ export type Pokemon = {
 
 // passed from pokemon page to DetailPage component:
 export type PokemonDetailProps = {
-    pokemon: Pokemon;
+    pokemon: Pokemon;       // detailed Pokemon data
+    displayName: string;   // official English name, e.g. "Mr. Mime" instead of "mr-mime"
 };

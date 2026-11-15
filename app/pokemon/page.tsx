@@ -1,21 +1,56 @@
-/*
-  app/pokemon/page.tsx
-  Owner: Sydney Stokes
+/**
+ * ============================================================================
+ * File:        pokemon/page.tsx
+ * Created By:  Sydney Stokes
+ * 
+ * Route: /pokemon?name={pokemonName}
+ * Example: /pokemon?name=pikachu
+ * 
+ * Purpose:     - Read the Pokemon name from the URL query string (searchParams).
+                - Fetch that Pokemon from PokeAPI using getPokemonSSR in lib/getPokemon.ts.
+                - Show the 404 page if the name is missing or not a real Pokemon.
+                  (source: https://nextjs.org/docs/app/api-reference/functions/not-found)
+                - Pass data to the DetailPage component (components/DetailPage.tsx),
+                  which displays artwork, types, base stats, abilities, height and weight.
+                - Use <Suspense> so a loading message shows while data is fetched.
+ *
+ * Teammates: link to a Pokemon's detail page with /pokemon?name={name}
+ * 
+ * ============================================================================
+ */
 
-  Route: /pokemon?name={pokemonName}
-  Example: /pokemon?name=pikachu
+import { Suspense } from "react";
+import { notFound } from "next/navigation";
+import { getPokemonSSR, getDisplayNameSSR } from "@/lib/getPokemon";
+import DetailPage from "@/components/DetailPage";
 
-  Plan:
-  - Read the Pokemon name from the URL query string (searchParams).
-  - Fetch that Pokemon from PokeAPI using getPokemonSSR in lib/getPokemon.ts.
-  - Show the 404 page if the name is missing or not a real Pokemon.
-  - Pass the data to the DetailPage component (components/DetailPage.tsx),
-    which displays artwork, types, base stats, abilities, height and weight.
-  - Wrapped in <Suspense> so a loading message shows while data is fetched.
+// props for the Pokemon content:
+type Props = {
+  searchParams: Promise<{ name?: string }>;
+};
 
-  Teammates: link to a Pokemon's detail page with /pokemon?name={name}
-*/
+// wrapper to show fallback while the Pokemon loads:
+export default function PokemonRoute({ searchParams }: Props) {
+  return (
+    <Suspense fallback={<p>Loading Pokemon...</p>}>
+      <PokemonContent searchParams={searchParams} />
+    </Suspense>
+  );
+}
 
-export default function PokemonRoute() {
-  return <p>Pokemon detail page coming soon.</p>;
+// reads the URL and fetches the data
+async function PokemonContent({ searchParams }: Props) {
+  // get Pokemon name from the query string:
+  const { name } = await searchParams;
+  if (!name) notFound();    // if no name is found, show 404
+
+  // fetch the Pokemon data
+  const pokemon = await getPokemonSSR(name).catch(() => null);
+  if (!pokemon) notFound();   // if Pokemon is not found, show 404
+
+  // if the name lookup fails, fall back to the API name so the page still loads:
+  const displayName = await getDisplayNameSSR(pokemon).catch(() => pokemon.name);
+
+  // return the DetailPage component with the fetched data:
+  return <DetailPage pokemon={pokemon} displayName={displayName} />;
 }

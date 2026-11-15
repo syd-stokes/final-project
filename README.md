@@ -1,5 +1,14 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Component Ownership
+
+| Component              | Owner              | File                            |
+|------------------------|--------------------|---------------------------------|
+| Home / Feed            | Yawavi Nougloze    | `components/HomePage.tsx`       |
+| Search / Filter        | Catalina Huynh     | `components/SearchPage.tsx`     |
+| Type pages             | Maria              | (pending)                       |
+| Pokemon detail page    | Sydney Stokes      | `components/DetailPage.tsx`     |
+
 ## Getting Started
 
 First, run the development server:

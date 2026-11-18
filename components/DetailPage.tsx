@@ -29,6 +29,19 @@ const StyledWrapper = styled.div`
   padding: 32px;
 `;
 
+// category title under the name, e.g. "Mouse Pokemon"
+const StyledCategory = styled.p`
+  margin-top: 0;
+  color: #666;
+  font-style: italic;
+`;
+
+// pokedex entry text
+const StyledDescription = styled.p`
+  max-width: 50%;
+  line-height: 1.5;
+`;
+
 const StyledArtwork = styled.img`
   width: 300px;
   max-width: 100%;
@@ -73,7 +86,7 @@ function formatName(name: string): string {
     .join(" ");
 }
 
-export default function DetailPage({ pokemon, displayName }: PokemonDetailProps) {
+export default function DetailPage({ pokemon, displayName, description, category }: PokemonDetailProps) {
   // get the artwork URL:
   const artwork = pokemon.sprites.other["official-artwork"].front_default;
 
@@ -86,6 +99,10 @@ export default function DetailPage({ pokemon, displayName }: PokemonDetailProps)
       <h1>
         #{String(pokemon.id).padStart(4, "0")} {displayName}    {/* display the pokemon's number and name */}
       </h1>
+
+      {/* only show the category and description if PokeAPI has them */}
+      {category ? <StyledCategory>{category}</StyledCategory> : null}
+      {description ? <StyledDescription>{description}</StyledDescription> : null}
 
       {/* show the artwork if PokeAPI has an image for this Pokemon: */}
       {artwork ? <StyledArtwork src={artwork} alt={displayName} /> : null}

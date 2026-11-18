@@ -21,7 +21,7 @@
 
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
-import { getPokemonSSR, getDisplayNameSSR } from "@/lib/getPokemon";
+import { getPokemonSSR, getSpeciesInfoSSR } from "@/lib/getPokemon";
 import DetailPage from "@/components/DetailPage";
 
 // props for the Pokemon content:
@@ -48,9 +48,19 @@ async function PokemonContent({ searchParams }: Props) {
   const pokemon = await getPokemonSSR(name).catch(() => null);
   if (!pokemon) notFound();   // if Pokemon is not found, show 404
 
-  // if the name lookup fails, fall back to the API name so the page still loads:
-  const displayName = await getDisplayNameSSR(pokemon).catch(() => pokemon.name);
+  // // if the name lookup fails, fall back to the API name so the page still loads:
+  // const displayName = await getDisplayNameSSR(pokemon).catch(() => pokemon.name);
+
+  // // return the DetailPage component with the fetched data:
+  // return <DetailPage pokemon={pokemon} displayName={displayName} />
+
+  // if the species lookup fails, fall back to the API name so the page still loads
+  const info = await getSpeciesInfoSSR(pokemon).catch(() => ({
+    displayName: pokemon.name,
+    description: "",
+    category: "",
+  }));
 
   // return the DetailPage component with the fetched data:
-  return <DetailPage pokemon={pokemon} displayName={displayName} />;
+  return <DetailPage pokemon={pokemon} displayName={info.displayName} description={info.description} category={info.category}/>
 }

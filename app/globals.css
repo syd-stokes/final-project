@@ -3,3 +3,8 @@
  * Created By: Catalina Huynh
  * Purpose:    This is a shared file for global CSS imports & stuff
  */
+
+ *{
+    margin: 0;
+    box-sizing: border-box;
+}

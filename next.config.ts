@@ -9,6 +9,9 @@ const nextConfig: NextConfig = {
     styledComponents: true,
   },
   devIndicators: false,
+  turbopack: {
+    root: __dirname,
+  },
 };
 
 export default nextConfig;
